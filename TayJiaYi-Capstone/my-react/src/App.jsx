@@ -1,7 +1,7 @@
 import './App.css'
 import ReactDOM from "react-dom/client";
 
-// Global array to hold stock data
+//
 let stocks = [];
 
 function App() 
@@ -15,7 +15,7 @@ function App()
 
   return (
     <div className="finance-dashboard">
-      <h1>Finance Dashboard</h1>
+      <h1><img src="./src/fin_dash_logo.png" alt="Finance Dashboard" className="dashboard-image" /></h1>
       {/* Stock form component to add new stocks */}
       <StockForm onAddStock={addStock} />
       {/* Stock list component to display current stock holdings */}
