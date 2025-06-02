@@ -30,6 +30,7 @@ body {
   margin: auto;
   text-align: left;
   transform: perspective(900px) rotateX(4deg);
+  position: static;
 }
 
 /* Enlarging and Center Dashboard Image */
@@ -68,7 +69,7 @@ body {
   font-weight: 100;
   width: 190px;
   padding: 16px;
-  background: linear-gradient(145deg, #FF66B3, #C700B3);
+  background: linear-gradient(145deg,#f25eff, #C700B3);
   color: #00FFFF;
   border: none;
   border-radius: 32px;
@@ -116,10 +117,50 @@ body {
   padding: 16px;
   border-radius: 32px;
   margin: 8px 0;
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 100;
   color: #00FFFF;
   box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.5), inset -3px -3px 8px rgba(255, 255, 255, 0.3);
+}
+
+.profit-text 
+{
+  color: green;
+  font-weight: bold;
+}
+
+.loss-text 
+{
+  color: red;
+  font-weight: bold;
+  animation: flash 1s infinite alternate; /* Flashing effect for loss */
+}
+
+
+@keyframes flash {
+  0% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.neutral-text 
+{
+  color: gray;
+  font-weight: bold;
+}
+
+/* Reset Button Styles */
+.reset-button {
+  font-family: 'Borsok';
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color:#8800ec;
+  color: #00FFFF;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 12px;
 }
 
 /* Remove number scrolling */
