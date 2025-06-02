@@ -1,0 +1,131 @@
+/* Directing to the Borsok font file */
+@font-face {
+  font-family: 'Borsok';
+  src: url('./src/Borsok-Regular.ttf') format('truetype');
+}
+
+/* General Styles */
+body {
+  font-family: 'Borsok', sans-serif;
+  font-weight: 100; /* Thinner for readability */
+  background: url('./src/background.png') no-repeat center center fixed;
+  background-size: cover; /* Ensures it covers the full screen */
+  color: #00FFFF; /* Flowing cyan for text */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Finance Dashboard Styles */
+.finance-dashboard {
+  background: linear-gradient(145deg, #2A0055, #3D0075); /* Neon-lit purple gradient */
+  padding: 40px;
+  border-radius: 25px;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5), inset -6px -6px 12px rgba(255, 255, 255, 0.2); /* Deep 3D shadow */
+  width: 95%;
+  max-width: 1300px;
+  margin: auto;
+  text-align: left;
+  transform: perspective(900px) rotateX(4deg);
+}
+
+/* Enlarging and Center Dashboard Image */
+.dashboard-image {
+  display: block;
+  width: 80%;
+  margin: 0 auto 20px;
+  filter: drop-shadow(6px 6px 12px rgba(0, 255, 255, 0.5)); /* Cyan glow */
+}
+
+/* Stock Form Styles */
+.stock-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+/* Input Fields with Glowing Cyan Fonts */
+.stock-form input {
+  width: 260px;
+  padding: 16px;
+  border: none;
+  border-radius: 32px;
+  font-size: 22px;
+  font-weight: 100;
+  background: linear-gradient(145deg, #5200A3, #310066);
+  color: #00FFFF; /* Flowing cyan */
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(255, 255, 255, 0.3);
+}
+
+/* Add Stock Button with Cyan Font */
+.stock-form button {
+  font-family: 'Borsok', sans-serif;
+  font-weight: 100;
+  width: 190px;
+  padding: 16px;
+  background: linear-gradient(145deg, #FF66B3, #C700B3);
+  color: #00FFFF;
+  border: none;
+  border-radius: 32px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5), inset -5px -5px 10px rgba(255, 255, 255, 0.3);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+/* Button Hover Effect */
+.stock-form button:hover {
+  transform: scale(1.1);
+  box-shadow: 12px 12px 24px rgba(0, 255, 255, 0.6);
+}
+
+/* Flashing Error Message */
+@keyframes flash {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+/* Stock Status Message */
+.stock-status {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 100;
+  margin-top: 15px;
+  color: #FF0000;
+  animation: flash 1s infinite;
+}
+
+/* Stock Holdings List */
+.stock-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+/* Stock List Item Styles */
+.stock-list li {
+  background: linear-gradient(145deg, #5A00A2, #380066);
+  padding: 16px;
+  border-radius: 32px;
+  margin: 8px 0;
+  font-size: 22px;
+  font-weight: 100;
+  color: #00FFFF;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.5), inset -3px -3px 8px rgba(255, 255, 255, 0.3);
+}
+
+/* Remove number scrolling */
+input[type="number"]::-webkit-outer-spin-button, 
+input[type="number"]::-webkit-inner-spin-button 
+{ 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
