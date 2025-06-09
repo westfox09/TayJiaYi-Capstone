@@ -1,128 +1,70 @@
-import './App.css'
-import ReactDOM from "react-dom/client";
+import './App.css';
+import { useState, useEffect } from 'react';
+import StockForm from './StockForm';
+import StockList from './StockList';
+import ResetButton from './ResetButton';
 
-//
-let stocks = [];
-
-function App() 
+// Main App Component - Manages the state of stocks and renders StockForm and StockList components
+function App()
 {
-  // Function to add a new stock to the global array
-  function addStock(stock)
+  // State to manage stocks, initialized from localStorage
+  const [stocks, setStocks] = useState(() => 
   {
-    stocks.push(stock); // Add stock to the global array
-    renderApp(); // Re-render the app to update the stock list
-  }
+    const savedStocks = localStorage.getItem("stocks"); // Retrieve saved stocks from localStorage
+    return savedStocks ? JSON.parse(savedStocks) : []; // Parse and return saved stocks or an empty array if none exist
+  });
 
-  return (
-    <div className="finance-dashboard">
-      <h1><img src="./src/fin_dash_logo.png" alt="Finance Dashboard" className="dashboard-image" /></h1>
-      {/* Stock form component to add new stocks */}
-      <StockForm onAddStock={addStock} />
-      {/* Stock list component to display current stock holdings */}
-      <StockList stocks={stocks} />
-    </div>
-  );
-}
-
-// Function to render the entire app
-function renderApp() 
-{
-  const rootElement = document.getElementById("root");
-  const root = ReactDOM.createRoot(rootElement);
-  root.render(<App />);
-}
-
-// Initial render of the app 
-function StockForm({ onAddStock }) 
-{
-  function fetchStockPrice(e) 
+  // Effect to save stocks to localStorage whenever stocks state changes
+  useEffect(() => 
   {
-    const symbol = e.target.value.toUpperCase(); // Get stock symbol from input
-    const priceInput = document.getElementById("stock-price"); // Get price input field
-    const errorDisplay = document.getElementById("error-message"); // Get error message display element
+    localStorage.setItem("stocks", JSON.stringify(stocks)); // Save stocks to localStorage
+  }, [stocks]);
 
-    if (!symbol) return; // If symbol is empty, do nothing
+  // Function to add a new stock or update an existing one
+  function addStock(stock) 
+  {
+    // Update the stocks state by checking if the stock already exists
+    setStocks((prevStocks) => 
+    {
+      const existingStockIndex = prevStocks.findIndex((s) => s.symbol === stock.symbol); // Check if the stock already exists in the list
 
-    // Fetch stock price from Alpha Vantage API
-    fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=R4MJUY96CQ5GH191`)
-      .then((response) => response.json()) // Parse JSON response
-      .then((data) => {
-        if (data["Global Quote"] && data["Global Quote"]["05. price"]) // Check if data contains valid stock price
-        {
-          priceInput.value = parseFloat(data["Global Quote"]["05. price"]); // Set price input value
-          errorDisplay.textContent = ""; // Clear any previous error messages
-        } 
-        else
-        {
-          errorDisplay.textContent = "Stock price unavailable. Please check back later"; // Display error if stock data is not available
-        }
-})
-
-      .catch(() => 
+      // If the stock already exists, update its quantity and price
+      if (existingStockIndex !== -1) 
       {
-        errorDisplay.textContent = "Error fetching stock data."; // Handle fetch error
-      });
+        // Stock already exists, update its quantity and price
+        const updatedStocks = [...prevStocks];
+        updatedStocks[existingStockIndex].quantity += stock.quantity; 
+        updatedStocks[existingStockIndex].price = stock.price; 
+        return updatedStocks;
+      } 
+      else 
+      {
+        // Stock does not exist, add it to the list
+        return [...prevStocks, stock];
+      }
+    });
   }
 
-// Handle form submission to add a new stock
-function handleSubmit(e) 
-{
-  e.preventDefault(); // Prevent default form submission behavior
+  // Function to reset stocks, clearing the state and localStorage
+  function resetStocks() 
+  {
+    setStocks([]); // Clears the stocks state
+    localStorage.removeItem("stocks"); // Removes stocks from localStorage
+  }
 
-  // Get stock symbol, quantity, and price from form inputs
-  const symbol = document.getElementById("stock-symbol").value.toUpperCase(); // Convert symbol to uppercase
-  const quantity = document.getElementById("stock-quantity").value; // Get quantity as a string
-  const price = document.getElementById("stock-price").value; // Get price as a string
-  const stockData = { symbol, quantity: parseFloat(quantity), price: parseFloat(price) }; // Create stock data object
-
-  onAddStock(stockData); // Call the onAddStock function passed as a prop to add the stock
-
-  // Reset form inputs after submission
-  document.getElementById("stock-symbol").value = "";
-  document.getElementById("stock-quantity").value = "";
-  document.getElementById("stock-price").value = "";
-  document.getElementById("error-message").textContent = "";
-}
-
-// Render the stock form with inputs and submit button
-return (
-  <div>
-  <form onSubmit={handleSubmit} className="stock-form">
-    {/* Stock Symbol Input (Auto-fetches price on change) */}
-    <input type="text" id="stock-symbol" placeholder="Stock Symbol" required onChange={fetchStockPrice} />
-    {/* Stock Quantity Input (Number input, no decimals) */}
-    <input type="number" id="stock-quantity" placeholder="Quantity" required step="1" onwheel="this.blur()" />
-    {/* Stock Price Input (Disabled, auto-filled on symbol change) */}
-    <input type="number" id="stock-price" placeholder="Current Price" required disabled />
-    {/* Submit Button to add stock */}
-    <button type="submit">Add Stock</button>
-    {/* Error message display for stock data issues */}
-  </form>
-    
-    {/* Display error message if stock data is unavailable */}
-    <p className="stock-status" id="error-message"></p>
-  </div>
-  );
-}
-
-// Component to display the list of stocks
-function StockList({ stocks }) 
-{
+  // Render the main dashboard with StockForm and StockList components
   return (
-    <div className="stock-list">
-      <h2>Stock List</h2>
-      {stocks.length === 0 ? (
-        <p>No stocks added yet.</p> // Display message if no stocks are present
-      ) : (
-        <ul>
-          {stocks.map((stock, index) => (
-            <li key={index}>
-              {stock.symbol}: {stock.quantity} shares at ${stock.price}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <>
+      <div className="finance-dashboard">
+        <h1>
+          <img src="./src/fin_dash_logo.png" alt="Finance Dashboard" className="dashboard-image" />
+        </h1>
+        <StockForm onAddStock={addStock} />
+        <StockList stocks={stocks} />
+      </div>
+      
+      <ResetButton resetStocks={resetStocks} />
+    </>
   );
 }
 
